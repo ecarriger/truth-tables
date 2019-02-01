@@ -6,7 +6,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <app-input-statement></app-input-statement>
-  <app-table-result></app-table-result>
+  <app-table-result *ngIf="tableResult"></app-table-result>
 </ion-content>
