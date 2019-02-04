@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-input-statement',
@@ -6,8 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./input-statement.component.scss']
 })
 export class InputStatementComponent implements OnInit {
+  private logicStatement : FormGroup;
 
-  constructor() { }
+  constructor( private formBuilder: FormBuilder ) {
+    this.logicStatement = this.formBuilder.group({
+      logicStatement: ['', Validators.required],
+    });
+   }
+
+   generateTable() {
+     console.log(this.logicStatement.value);
+   }
 
   ngOnInit() {
   }
