@@ -20,7 +20,7 @@ export class GenerateTableService {
       var allConnectorIndexes: Array<number> = this.findConnectorIndexes(compound);
       allConnectorIndexes.forEach(element => {
         if(this.checkIfOutsidePerens(compound, element)) {
-          var sentences = [compound.substring(0,element),compound.substring(element+1, compound.length)];
+          var sentences = [this.trimPerens(compound.substring(0,element)),this.trimPerens(compound.substring(element+1, compound.length))];
           var connector = compound.substr(element, 1);
         }
       });
@@ -50,6 +50,14 @@ export class GenerateTableService {
     var openPerens = compound.match(/\(/g);
     var closePerens = compound.match(/\)/g);
     return openPerens.length == closePerens.length;
+  }
+  private trimPerens(sentence: String): String {
+    if(sentence.search(/\(/) == 0) {
+      return sentence.substring(1, sentence.length);
+    }
+    else {
+      return sentence;
+    }    
   }
 
 
