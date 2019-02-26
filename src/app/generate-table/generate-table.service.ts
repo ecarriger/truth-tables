@@ -11,7 +11,7 @@ export class GenerateTableService {
 
   constructor() { }
 
-  private statement = function(compound: String) {
+  private breakDownStatement = function(compound: String) {
     if (compound.search(/\(/) == 0) {
       var sentences = compound.split(/[v&]/);
       var connector = compound.match(/[v&]/);
@@ -32,18 +32,20 @@ export class GenerateTableService {
     }
   }
 
-  //Test Cases
-  private statement1 = this.statement("(Av(B&C))v(BvC)");
-  private statement2 = this.statement("(AvB)&(BvC)");
 
   private findConnectorIndexes = function(compound: String): Array<number> {
     var allConnectors = [];
-      let i = compound.search(/[v&]/);
-      while ( i !== -1 ) {
-        allConnectors.push(i);
-        i = compound.substring(i, compound.length).search(/[v&]/);
-      };
-    return allConnectors;
+    var index = compound.indexOf("v");
+    while ( index !== -1 ) {
+      allConnectors.push(index);   
+      index = compound.indexOf("v", index + 1);
+    };
+    index = compound.indexOf("&");
+    while ( index !== -1 ) {
+      allConnectors.push(index);   
+      index = compound.indexOf("&", index + 1);
+    };
+  return allConnectors;
   }
   private checkIfOutsidePerens = function(compound: String, connectorIndex: number): Boolean {
     compound = compound.substring(0, connectorIndex);
@@ -62,22 +64,9 @@ export class GenerateTableService {
 
 
   //Obselete
-  public handleStatement(statement: String) {
-     
-    if (statement.search(/\(/) == 0) {
-      console.log("Found (")
-      var compound = statement.match(/\((!\()*\)/);
-    } 
-    else {
-      if(statement.match(/[v&]/g).length == 1) {
-        console.log(statement.match(/[v&]/));
-      }
-      else {
-        console.log("Order of operations conflict. Please use perentheses.");
-      }
-    }
-  
-  
+  public handleStatement(inputStatement: String) {
+    var statement = this.breakDownStatement(inputStatement);
+    console.log(statement);
 
   }
 
