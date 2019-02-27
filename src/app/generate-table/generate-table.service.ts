@@ -9,19 +9,21 @@ export class GenerateTableService {
 
   
 
-  constructor() { }
+  constructor() {}
 
   private breakDownStatement = function(compound: String) {
-    if (compound.search(/\(/) == 0) {
-      var sentences = compound.split(/[v&]/);
-      var connector = compound.match(/[v&]/);
+    var sentences: Array<String>;
+    var connector: any;
+    if (compound.search(/\(/) === -1) {
+      sentences = compound.split(/[v&]/);
+      connector = compound.match(/[v&]/);
     }
     else {
       var allConnectorIndexes: Array<number> = this.findConnectorIndexes(compound);
       allConnectorIndexes.forEach(element => {
-        if(this.checkIfOutsidePerens(compound, element)) {
-          var sentences = [this.trimPerens(compound.substring(0,element)),this.trimPerens(compound.substring(element+1, compound.length))];
-          var connector = compound.substr(element, 1);
+        if(this.checkIfOutsidePerens(compound, element) === true) {
+          sentences = [this.trimPerens(compound.substring(0,element)),this.trimPerens(compound.substring(element+1, compound.length))];
+          connector = compound.substr(element, 1);
         }
       });
     }
@@ -48,14 +50,20 @@ export class GenerateTableService {
   return allConnectors;
   }
   private checkIfOutsidePerens = function(compound: String, connectorIndex: number): Boolean {
-    compound = compound.substring(0, connectorIndex);
-    var openPerens = compound.match(/\(/g);
-    var closePerens = compound.match(/\)/g);
+    var compoundSubString = compound.substring(0, connectorIndex);
+    var openPerens = [];
+    var closePerens = [];
+    if (compoundSubString.search(/\(/g) !== -1) {
+        openPerens = compoundSubString.match(/\(/g);
+    }    
+    if (compoundSubString.search(/\)/g) !== -1) {
+        closePerens = compoundSubString.match(/\)/g);
+    }
     return openPerens.length == closePerens.length;
   }
   private trimPerens(sentence: String): String {
-    if(sentence.search(/\(/) == 0) {
-      return sentence.substring(1, sentence.length);
+    if(sentence.search(/\(/) !== -1) {
+      return sentence.substring(1, sentence.length - 1);
     }
     else {
       return sentence;
